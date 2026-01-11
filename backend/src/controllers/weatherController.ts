@@ -5,12 +5,11 @@ export const getWeatherData = async(req: Request, res: Response) => {
     
     try {
         const cities = getCityCodes();
-        console.log(cities);
+
 
         const results = [];
         
         for (const city of cities){
-            console.log(city);
             const cityResult = await getWeatherByCityCode(Number(city.CityCode));
             if (cityResult) {
                 results.push(cityResult);
