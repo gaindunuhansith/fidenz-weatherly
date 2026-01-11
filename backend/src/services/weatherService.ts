@@ -2,6 +2,7 @@ import fs from "fs";
 import env from "../config/env.js"
 import axios from "axios";
 import weatherCache from "../config/cache.js";
+import calculateComfortScore from "./comfortService.js";
 
 
 export const getCityCodes = () => {
@@ -36,10 +37,25 @@ export const getWeatherByCityCode = async(cityCode: number) => {
     try {
         const result = await axios.get(URL);
 
+        const temperature = (result.data.main.temp - 273.15);
 
-        weatherCache.set(cityCode, result.data);
+        const comfortScore = calculateComfortScore({
+            temperature: temperature,
+            humidity: result.data.main.humidity,
+            windSpeed: result.data.wind.speed,
+        });
+
+        const weatherData = {
+            cityName: result.data.name,
+            weatherDescription: result.data.weather[0].description,
+            temperature: temperature,
+            comfortScore: comfortScore
+        }
+
+
+        weatherCache.set(cityCode, weatherData);
         
-        return result;
+        return weatherData;
     } catch (error) {
         console.log("Error fetching wather data: ", error);
         throw error;
