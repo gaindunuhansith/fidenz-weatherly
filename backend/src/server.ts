@@ -1,5 +1,6 @@
 import app from "./app.js";
 import env from "./config/env.js";
+import { getWeatherByCityCode } from "./services/weatherService.js";
 
 const PORT = env.PORT || 5000;
 
