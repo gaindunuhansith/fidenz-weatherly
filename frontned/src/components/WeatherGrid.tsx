@@ -1,5 +1,6 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 interface WeatherData {
   cityName: string;
@@ -24,14 +25,9 @@ export default function WeatherGrid({ darkMode, toggleDarkMode }: { darkMode: bo
     const fetchWeather = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5000/api/v1/weather');
+        const response = await axios.get('http://localhost:5000/api/v1/weather');
         
-        if (!response.ok) {
-          throw new Error('Failed to fetch weather data');
-        }
-        
-        const data = await response.json();
-        const weatherData = data['weather data'].map((item: WeatherResult) => item.data);
+        const weatherData = response.data['weather data'].map((item: WeatherResult) => item.data);
         setWeather(weatherData);
         setError(null);
       } catch (err) {

@@ -2,37 +2,39 @@
 
 Weather app with Auth0 login that shows comfort scores for different cities.
 
+## Requirements
+
+- Node.js (v16 or higher)
+- npm (v8 or higher)
+
+## Tech Stack
+
+**Backend**: TypeScript, Express.js  
+**Frontend**: React, TypeScript, Vite 
+
 ## Setup
 
-### Environment Variables
+### Backend Setup
+1. Navigate to backend directory: `cd backend`
+2. Install dependencies: `npm install`
+3. Create `.env` file with:
+   ```
+   PORT=5000
+   WEATHER_API_KEY=your_openweathermap_api_key
+   ```
+4. Run development server: `npm run dev`
 
-Backend `.env`:
-```
-PORT=5000
-WEATHER_API_KEY=your_api_key
-```
+### Frontend Setup
+1. Navigate to frontend directory: `cd frontned`
+2. Install dependencies: `npm install`
+3. Create `.env` file with:
+   ```
+   VITE_AUTH0_DOMAIN=your_auth0_domain
+   VITE_AUTH0_CLIENT_ID=your_auth0_client_id
+   ```
+4. Run development server: `npm run dev`
 
-Frontend `.env`:
-```
-VITE_AUTH0_DOMAIN=your_domain
-VITE_AUTH0_CLIENT_ID=your_client_id
-```
-
-### Run Locally
-
-Backend:
-```bash
-cd backend
-npm install
-npm run dev
-```
-
-Frontend:
-```bash
-cd frontned
-npm install
-npm run dev
-```
+**Note**: The application fetches weather data for predefined cities from the weather API.
 
 ## Comfort Index Formula
 
