@@ -15,11 +15,14 @@ interface WeatherResult {
   cacheStatus: 'HIT' | 'MISS';
 }
 
+type SortOption = 'default' | 'comfortAsc' | 'comfortDesc' | 'rankAsc' | 'rankDesc';
+
 export default function WeatherGrid({ darkMode, toggleDarkMode }: { darkMode: boolean; toggleDarkMode: () => void }) {
   const { logout, user } = useAuth0();
   const [weather, setWeather] = useState<WeatherData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<SortOption>('default');
 
   useEffect(() => {
     const fetchWeather = async () => {
@@ -52,6 +55,23 @@ export default function WeatherGrid({ darkMode, toggleDarkMode }: { darkMode: bo
     return '🌤️';
   };
 
+  const getSortedWeather = () => {
+    const sorted = [...weather];
+    
+    switch (sortBy) {
+      case 'comfortAsc':
+        return sorted.sort((a, b) => a.comfortScore - b.comfortScore);
+      case 'comfortDesc':
+        return sorted.sort((a, b) => b.comfortScore - a.comfortScore);
+      case 'rankAsc':
+        return sorted.sort((a, b) => (a.rank || 999) - (b.rank || 999));
+      case 'rankDesc':
+        return sorted.sort((a, b) => (b.rank || 0) - (a.rank || 0));
+      default:
+        return sorted;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
       <nav className="bg-white dark:bg-gray-800 shadow-sm">
@@ -77,6 +97,20 @@ export default function WeatherGrid({ darkMode, toggleDarkMode }: { darkMode: bo
       </nav>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-6 flex items-center gap-3">
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Sort by:</label>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as SortOption)}
+            className="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <option value="default">Default Order</option>
+            <option value="comfortDesc">Comfort Score (High to Low)</option>
+            <option value="comfortAsc">Comfort Score (Low to High)</option>
+            <option value="rankAsc">Rank (Best First)</option>
+            <option value="rankDesc">Rank (Worst First)</option>
+          </select>
+        </div>
         {loading ? (
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
@@ -88,7 +122,7 @@ export default function WeatherGrid({ darkMode, toggleDarkMode }: { darkMode: bo
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {weather.map((item) => (
+            {getSortedWeather().map((item) => (
               <div
                 key={item.cityName}
                 className="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow p-6"
