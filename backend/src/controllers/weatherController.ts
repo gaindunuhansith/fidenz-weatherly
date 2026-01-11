@@ -6,12 +6,12 @@ interface WeatherData {
     weatherDescription: string;
     temperature: number;
     comfortScore: number;
+    rank?: number;
 }
 
 interface WeatherResult {
     data: WeatherData;
     cacheStatus: 'HIT' | 'MISS';
-    rank?: number;
 }
 
 export const getWeatherData = async(req: Request, res: Response) => {
@@ -35,7 +35,7 @@ export const getWeatherData = async(req: Request, res: Response) => {
         results.sort((a, b) => b.data.comfortScore - a.data.comfortScore);
 
         results.forEach((item, index) => {
-            item.rank = index + 1;
+            item.data.rank = index + 1;
         });
 
         
