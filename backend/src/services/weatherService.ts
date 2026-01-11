@@ -37,7 +37,7 @@ export const getWeatherByCityCode = async(cityCode: number) => {
     try {
         const result = await axios.get(URL);
 
-        const temperature = (result.data.main.temp - 273.15);
+        const temperature = parseFloat((result.data.main.temp - 273.15).toFixed(1));
 
         const comfortScore = calculateComfortScore({
             temperature: temperature,
