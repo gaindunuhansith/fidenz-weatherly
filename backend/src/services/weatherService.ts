@@ -23,7 +23,7 @@ export const getWeatherByCityCode = async(cityCode: number) => {
         console.log("Cache HIT");
         return {
             data: cachedData,
-            status: 'HIT'
+            cacheStatus: 'HIT'
         };
     }
 
@@ -55,7 +55,10 @@ export const getWeatherByCityCode = async(cityCode: number) => {
 
         weatherCache.set(cityCode, weatherData);
         
-        return weatherData;
+        return {
+            data: weatherData,
+            cacheStatus: "MISS"
+        };
     } catch (error) {
         console.log("Error fetching wather data: ", error);
         throw error;
